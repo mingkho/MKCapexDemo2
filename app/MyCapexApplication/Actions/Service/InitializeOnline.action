@@ -1,0 +1,10 @@
+{
+    "Service": "/MyCapexApplication/Services/service1.service",
+    "_Type": "Action.Type.ODataService.Initialize",
+    "ShowActivityIndicator": true,
+    "OnSuccess": "/MyCapexApplication/Actions/Service/InitializeOnlineSuccessMessage.action",
+    "OnFailure": "/MyCapexApplication/Actions/Service/InitializeOnlineFailureMessage.action",
+    "ActionResult": {
+        "_Name": "init"
+    }
+}

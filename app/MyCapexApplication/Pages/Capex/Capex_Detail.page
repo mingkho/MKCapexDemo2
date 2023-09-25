@@ -1,0 +1,76 @@
+{
+	"Caption": "Capex Detail",
+	"DesignTimeTarget": {
+		"Service": "/MyCapexApplication/Services/service1.service",
+		"EntitySet": "Capex",
+		"QueryOptions": ""
+	},
+	"ActionBar": {
+		"Items": [
+			{
+				"OnPress": "/MyCapexApplication/Rules/Capex/NavToCapex_Edit.js",
+				"Position": "Right",
+				"SystemItem": "Edit"
+			},
+			{
+				"OnPress": "/MyCapexApplication/Rules/Capex/Capex_DeleteConfirmation.js",
+				"Position": "Right",
+				"SystemItem": "Trash"
+			}
+		]
+	},
+	"Controls": [
+		{
+			"Sections": [
+				{
+					"ObjectHeader": {
+						"Tags": [],
+						"DetailImage": "",
+						"HeadlineText": "{ID}",
+						"Subhead": "{Description}",
+						"BodyText": "",
+						"Footnote": "{category_ID}",
+						"Description": "{TotalCost}",
+						"StatusText": "{BusinessPartner_BusinessPartner}",
+						"StatusImage": "",
+						"SubstatusImage": "",
+						"SubstatusText": ""
+					},
+					"_Type": "Section.Type.ObjectHeader"
+				},
+				{
+					"KeyAndValues": [
+						{
+							"KeyName": "Description",
+							"Value": "{Description}"
+						},
+						{
+							"KeyName": "TotalCost",
+							"Value": "{TotalCost}"
+						},
+						{
+							"KeyName": "category_ID",
+							"Value": "{category_ID}"
+						},
+						{
+							"KeyName": "BusinessPartner_BusinessPartner",
+							"Value": "{BusinessPartner_BusinessPartner}"
+						}
+					],
+					"Layout": {
+						"NumberOfColumns": 2
+					},
+					"MaxItemCount": 1,
+					"_Name": "SectionKeyValue0",
+					"_Type": "Section.Type.KeyValue"
+				}
+			],
+			"DataSubscriptions": [],
+			"_Type": "Control.Type.SectionedTable",
+			"_Name": "SectionedTable"
+		}
+	],
+	"_Type": "Page",
+	"_Name": "Capex_Detail",
+	"PrefersLargeCaption": true
+}

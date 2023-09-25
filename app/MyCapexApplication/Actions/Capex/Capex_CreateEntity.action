@@ -1,0 +1,19 @@
+{
+    "CreateLinks": [],
+    "OnFailure": "/MyCapexApplication/Actions/CreateEntityFailureMessage.action",
+    "OnSuccess": "/MyCapexApplication/Actions/CreateEntitySuccessMessage.action",
+    "Properties": {
+        "Description": "#Control:Description/#Value",
+        "TotalCost": "#Control:TotalCost/#Value",
+        "category_ID": "#Control:category_ID/#SelectedValue",
+        "BusinessPartner_BusinessPartner": "#Control:BusinessPartner_BusinessPartner/#SelectedValue"
+    },
+    "Target": {
+        "EntitySet": "Capex",
+        "Service": "/MyCapexApplication/Services/service1.service"
+    },
+    "ActionResult": {
+        "_Name": "create"
+    },
+    "_Type": "Action.Type.ODataService.CreateEntity"
+}

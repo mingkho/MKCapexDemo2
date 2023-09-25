@@ -1,0 +1,89 @@
+{
+	"Caption": "Update Capex Detail",
+	"DesignTimeTarget": {
+		"Service": "/MyCapexApplication/Services/service1.service",
+		"EntitySet": "Capex",
+		"QueryOptions": ""
+	},
+	"ActionBar": {
+		"Items": [
+			{
+				"Position": "Left",
+				"Caption": "Cancel",
+				"OnPress": "/MyCapexApplication/Rules/Capex/Capex_Cancel.js"
+			},
+			{
+				"Position": "Right",
+				"SystemItem": "Save",
+				"OnPress": "/MyCapexApplication/Rules/Capex/Capex_UpdateEntity.js"
+			}
+		]
+	},
+	"Controls": [
+		{
+			"Sections": [
+				{
+					"_Type": "Section.Type.FormCell",
+					"_Name": "SectionFormCell0",
+					"Visible": true,
+					"Controls": [
+						{
+							"Caption": "Description",
+							"_Name": "Description",
+							"Value": "{Description}",
+							"_Type": "Control.Type.FormCell.SimpleProperty"
+						},
+						{
+							"Caption": "TotalCost",
+							"_Name": "TotalCost",
+							"Value": "{TotalCost}",
+							"KeyboardType": "Number",
+							"_Type": "Control.Type.FormCell.SimpleProperty"
+						},
+						{
+							"Caption": "category_ID",
+							"AllowMultipleSelection": false,
+							"AllowEmptySelection": true,
+							"IsPickerDismissedOnSelection": true,
+							"IsSelectedSectionEnabled": true,
+							"PickerItems": {
+								"DisplayValue": "{Name}",
+								"ReturnValue": "{ID}",
+								"Target": {
+									"EntitySet": "Category",
+									"Service": "/MyCapexApplication/Services/service1.service"
+								}
+							},
+							"Value": "{category_ID}",
+							"_Name": "category_ID",
+							"_Type": "Control.Type.FormCell.ListPicker"
+						},
+						{
+							"Caption": "BusinessPartner_BusinessPartner",
+							"AllowMultipleSelection": false,
+							"AllowEmptySelection": true,
+							"IsPickerDismissedOnSelection": true,
+							"IsSelectedSectionEnabled": true,
+							"PickerItems": {
+								"DisplayValue": "{BusinessPartner}",
+								"ReturnValue": "{BusinessPartner}",
+								"Target": {
+									"EntitySet": "BusinessPartner",
+									"Service": "/MyCapexApplication/Services/service1.service"
+								}
+							},
+							"Value": "{BusinessPartner_BusinessPartner}",
+							"_Name": "BusinessPartner_BusinessPartner",
+							"_Type": "Control.Type.FormCell.ListPicker"
+						}
+					]
+				}
+			],
+			"_Name": "SectionedTable0",
+			"_Type": "Control.Type.SectionedTable"
+		}
+	],
+	"_Type": "Page",
+	"_Name": "Capex_Edit",
+	"PrefersLargeCaption": true
+}

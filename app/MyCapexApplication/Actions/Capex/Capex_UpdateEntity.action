@@ -1,0 +1,20 @@
+{
+    "_Type": "Action.Type.ODataService.UpdateEntity",
+    "Target": {
+        "EntitySet": "Capex",
+        "Service": "/MyCapexApplication/Services/service1.service",
+        "ReadLink": "{@odata.readLink}"
+    },
+    "Properties": {
+        "Description": "#Control:Description/#Value",
+        "TotalCost": "#Control:TotalCost/#Value",
+        "category_ID": "#Control:category_ID/#SelectedValue",
+        "BusinessPartner_BusinessPartner": "#Control:BusinessPartner_BusinessPartner/#SelectedValue"
+    },
+    "UpdateLinks": [],
+    "ActionResult": {
+        "_Name": "update"
+    },
+    "OnSuccess": "/MyCapexApplication/Actions/UpdateEntitySuccessMessage.action",
+    "OnFailure": "/MyCapexApplication/Actions/UpdateEntityFailureMessage.action"
+}
