@@ -1,0 +1,213 @@
+_schema-version: '3.1'
+ID: MKCapexDemo2
+version: 1.0.0
+description: A simple CAP project.
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - rm -rf build/dist
+        - mkdir -p build/dist
+        - rm -rf build/ui-deployer
+        - mkdir -p build/ui-deployer
+    - builder: custom
+      commands:
+        - npm install --production
+        - >-
+          bash -c "cds -v | grep 'cds-dk' || npm i --production --no-save
+          @sap/cds-dk @sap/mdk-tools"
+        - bash -c "export PATH=$PATH:$(pwd)/node_modules/.bin"
+        - cds build --production
+modules:
+  - name: MKCapexDemo2-MyCapexApplication
+    type: html5
+    path: app/MyCapexApplication
+    build-parameters:
+      builder: custom
+      commands:
+        - npx mdk build --target module --ui5 --forceUpdate
+        - bash -c "cd Web/MDKModule && rm -rf .npmrc && npm install"
+        - bash -c "cd Web/MDKModule && npm run build"
+        - >-
+          bash -c "mv Web/MDKModule/MDKModule-content.zip
+          ../../build/dist/MyCapexApplication.zip"
+        - rm -rf Web/MDKModule/dist
+      _artifactName: MyCapexApplication.zip
+      supported-platforms: []
+      build-result: ../../build/dist
+  - name: MKCapexDemo2-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+      ignore:
+        - node_modules
+        - package-lock.json
+    requires:
+      - name: MKCapexDemo2-service-uaa
+      - name: MKCapexDemo2-service-db
+  - name: MKCapexDemo2-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      memory: 256MB
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    build-parameters:
+      builder: npm
+      ignore:
+        - node_modules
+        - package-lock.json
+    requires:
+      - name: MKCapexDemo2-service-uaa
+      - name: MKCapexDemo2-service-db
+      - name: MKCapexDemo2-service-destination
+      - name: MKCapexDemo2-service-metadata
+      - name: MKCapexDemo2-service-connectivity
+      - name: MKCapexDemo2-service-logs
+  - name: MKCapexDemo2-aux-destinations
+    type: com.sap.application.content
+    parameters:
+      content:
+        subaccount:
+          existing_destinations_policy: update
+          destinations:
+            - Authentication: OAuth2UserTokenExchange
+              Name: MKCapexDemo2-service-uaa
+              ServiceInstanceName: MKCapexDemo2-uaa
+              ServiceKeyName: MKCapexDemo2-uaa-key
+              sap.cloud.service: lcap.MKCapexDemo2
+            - Authentication: OAuth2UserTokenExchange
+              Name: MKCapexDemo2-app-srv
+              TokenServiceInstanceName: MKCapexDemo2-uaa
+              TokenServiceKeyName: MKCapexDemo2-uaa-key
+              URL: ~{srv-api/srv-url}
+              sap.cloud.service: lcap.MKCapexDemo2
+            - Name: MKCapexDemo2-service-html5-apps-repo-host
+              ServiceInstanceName: MKCapexDemo2-html5-apps-repo-host
+              ServiceKeyName: MKCapexDemo2-html5-apps-repo-host-key
+              sap.cloud.service: lcap.MKCapexDemo2
+            - Authentication: OAuth2UserTokenExchange
+              Name: MKCapexDemo2-MKCapexDemo2Service
+              TokenServiceInstanceName: MKCapexDemo2-uaa
+              TokenServiceKeyName: MKCapexDemo2-uaa-key
+              URL: ~{srv-api/srv-url}/service/MKCapexDemo2
+              sap.cloud.service: lcap.MKCapexDemo2
+              sap.applicationdevelopment.actions.enabled: false
+              sap.build.usage: CAP
+              sap.processautomation.enabled: false
+              HTML5.DynamicDestination: false
+              WebIDEEnabled: false
+              MobileEnabled: false
+              AppgyverEnabled: false
+    build-parameters:
+      no-source: true
+    requires:
+      - name: MKCapexDemo2-service-uaa
+        parameters:
+          service-key:
+            name: MKCapexDemo2-uaa-key
+      - name: srv-api
+      - name: MKCapexDemo2-service-html5-apps-repo-host
+        parameters:
+          service-key:
+            name: MKCapexDemo2-html5-apps-repo-host-key
+      - name: MKCapexDemo2-service-destination
+        parameters:
+          content-target: true
+  - name: MKCapexDemo2-launchpad
+    type: html5
+    path: build/launchpad
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - >-
+          npx -p @ui5/cli@^3.0.0 ui5 build --dest dist
+          --include-task=generateManifestBundle
+          --include-task=generateCachebusterInfo
+        - bash -c "cd dist && npx bestzip ../../../build/dist/launchpad.zip *"
+        - rm -rf dist
+      _artifactName: launchpad.zip
+      supported-platforms: []
+      build-result: ../../build/dist
+  - name: MKCapexDemo2-aux-ui-deployer
+    type: com.sap.application.content
+    path: build/ui-deployer
+    build-parameters:
+      build-result: resources
+      requires:
+        - name: MKCapexDemo2-MyCapexApplication
+          artifacts:
+            - MyCapexApplication.zip
+          target-path: resources
+        - name: MKCapexDemo2-launchpad
+          artifacts:
+            - launchpad.zip
+          target-path: resources
+    requires:
+      - name: MKCapexDemo2-service-html5-apps-repo-host
+        parameters:
+          content-target: true
+resources:
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-uaa
+    parameters:
+      service: xsuaa
+      service-plan: application
+      service-name: MKCapexDemo2-uaa
+      path: xs-security.json
+      config:
+        oauth2-configuration:
+          redirect-uris:
+            - https://*.${default-domain}/login/*
+        xsappname: MKCapexDemo2-${space}
+        role-collections: []
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-db
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      service-name: MKCapexDemo2-db
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-destination
+    parameters:
+      service: destination
+      service-plan: lite
+      service-name: MKCapexDemo2-destination
+      config:
+        HTML5Runtime_enabled: true
+        version: 1.0.0
+  - type: org.cloudfoundry.user-provided-service
+    name: MKCapexDemo2-service-metadata
+    parameters:
+      service: metadata
+      service-plan: standard
+      service-name: MKCapexDemo2-metadata
+      config:
+        default-domain: ${default-domain}
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-connectivity
+    parameters:
+      service: connectivity
+      service-plan: lite
+      service-name: MKCapexDemo2-connectivity
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-logs
+    parameters:
+      service: application-logs
+      service-plan: lite
+      service-name: MKCapexDemo2-logs
+  - type: org.cloudfoundry.managed-service
+    name: MKCapexDemo2-service-html5-apps-repo-host
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+      service-name: MKCapexDemo2-html5-apps-repo-host

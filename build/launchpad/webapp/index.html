@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> Project Preview </title>
+    <title> Application Overview </title>
     <script src="shared-config.js"></script>
     <script src="https://ui5.sap.com/1.108.7/resources/sap-ui-core.js" 
             id="sap-ui-bootstrap"
@@ -28,7 +28,7 @@
                     return Controller.extend("PreviewController", {
                         onInit: function () {
 
-                            const data = {"Services":[{"ServiceName":"MKCapexDemo2Service","DetailsURL":"./service/MKCapexDemo2/","Metadata":"./service/MKCapexDemo2/$metadata","Entities":[{"Name":"Capex","URL":"./service/MKCapexDemo2/Capex","FioriURL":"$fiori-preview/MKCapexDemo2Service/Capex#preview-app"},{"Name":"Category","URL":"./service/MKCapexDemo2/Category","FioriURL":"$fiori-preview/MKCapexDemo2Service/Category#preview-app"},{"Name":"BusinessPartner","URL":"./service/MKCapexDemo2/BusinessPartner","FioriURL":"$fiori-preview/MKCapexDemo2Service/BusinessPartner#preview-app"}],"EntitiesCount":3}]}
+                            const data = {"Services":[{"ServiceName":"MKCapexDemo2Service","DetailsURL":"./service/MKCapexDemo2/","Metadata":"./service/MKCapexDemo2/$metadata","Entities":[{"Name":"Capex","URL":"./service/MKCapexDemo2/Capex","FioriURL":""},{"Name":"Category","URL":"./service/MKCapexDemo2/Category","FioriURL":""},{"Name":"BusinessPartner","URL":"./service/MKCapexDemo2/BusinessPartner","FioriURL":""}],"EntitiesCount":3}]}
                             this.getView().setModel(new JSONModel(data));
                         }
                     });

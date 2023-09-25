@@ -1,0 +1,5 @@
+{
+  "ProjectOverviewURL": "https://lcap-int.launchpad.cfapps.sap.hana.ondemand.com/lcapMKCapexDemo2.MKCapexDemo2Launchpad-1.0.0",
+  "DeployedUTCTime": "2023-09-25T06:46:45.252Z",
+  "ApplicationLogURL": "https://logs.cf.sap.hana.ondemand.com/app/dashboards#/view/Overview?_g=(filters:!((query:(match_phrase:(component_name:MKCapexDemo2-srv)))))"
+}
